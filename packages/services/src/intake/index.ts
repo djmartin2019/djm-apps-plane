@@ -4,5 +4,5 @@
  * See the LICENSE file for details.
  */
 
-export * from "./intake.service";
-export * from "./issue.service";
+export * from "./inbox-issue.service";
+export * from "./intake-work-item-version.service";

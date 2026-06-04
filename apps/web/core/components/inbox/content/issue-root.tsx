@@ -33,7 +33,7 @@ import useReloadConfirmations from "@/hooks/use-reload-confirmation";
 import { DeDupeIssuePopoverRoot } from "@/plane-web/components/de-dupe/duplicate-popover";
 import { useDebouncedDuplicateIssues } from "@/plane-web/hooks/use-debounced-duplicate-issues";
 // services
-import { IntakeWorkItemVersionService } from "@/services/inbox";
+import { IntakeWorkItemVersionService } from "@plane/services";
 // stores
 import type { IInboxIssueStore } from "@/store/inbox/inbox-issue.store";
 // local imports

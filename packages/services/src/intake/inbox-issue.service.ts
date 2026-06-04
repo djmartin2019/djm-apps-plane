@@ -10,7 +10,7 @@ import type { TInboxIssue, TIssue, TInboxIssueWithPagination } from "@plane/type
 import { EInboxIssueSource } from "@plane/types";
 // helpers
 // services
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 
 export class InboxIssueService extends APIService {
   constructor() {
