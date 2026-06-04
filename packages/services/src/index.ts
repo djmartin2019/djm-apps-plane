@@ -24,5 +24,6 @@ export * from "./workspace";
 export * from "./file";
 export * from "./label";
 export * from "./state";
+export * from "./integrations";
 export * from "./issue";
 export * from "./page";

@@ -6,7 +6,7 @@
 
 import { API_BASE_URL } from "@plane/constants";
 import type { IJiraMetadata, IJiraResponse, IJiraImporterForm } from "@plane/types";
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 // types
 
 export class JiraImporterService extends APIService {
