@@ -19,7 +19,7 @@ import type {
   TIssueSubIssues,
 } from "@plane/types";
 // services
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 
 export class IssueService extends APIService {
   private serviceType: TIssueServiceType;

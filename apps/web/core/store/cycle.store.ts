@@ -23,7 +23,7 @@ import { orderCycles, shouldFilterCycle, getDate, updateDistribution } from "@pl
 // services
 import { CycleService } from "@/services/cycle.service";
 import { CycleArchiveService } from "@/services/cycle_archive.service";
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 import { ProjectService } from "@plane/services";
 // store
 import type { CoreRootStore } from "./root.store";

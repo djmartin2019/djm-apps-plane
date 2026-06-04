@@ -8,7 +8,7 @@ import { set } from "lodash-es";
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 // services
 import type { TIssueLink, TIssueLinkMap, TIssueLinkIdMap, TIssueServiceType } from "@plane/types";
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 // types
 import type { IIssueDetail } from "./root.store";
 

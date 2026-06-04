@@ -17,7 +17,7 @@ import { EInboxIssueStatus } from "@plane/types";
 // helpers
 // services
 import { InboxIssueService } from "@/services/inbox";
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 // store
 import type { CoreRootStore } from "../root.store";
 

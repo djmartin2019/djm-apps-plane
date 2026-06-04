@@ -18,7 +18,7 @@ import type {
   TLoader,
 } from "@plane/types";
 // services
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 // store
 import type { IIssueDetail } from "./root.store";
 import type { IWorkItemSubIssueFiltersStore } from "./sub_issues_filter.store";

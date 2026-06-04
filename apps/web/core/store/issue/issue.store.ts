@@ -13,7 +13,7 @@ import type { TIssue } from "@plane/types";
 import { getCurrentDateTimeInISO } from "@plane/utils";
 import { rootStore } from "@/lib/store-context";
 // services
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 
 export type IIssueStore = {
   // observables

@@ -4,5 +4,12 @@
  * See the LICENSE file for details.
  */
 
+export * from "./issue.service";
+export * from "./issue-archive.service";
+export * from "./issue-activity.service";
 export * from "./issue-filter.service";
+export * from "./issue-label.service";
+export * from "./issue-reaction.service";
+export * from "./issue-relation.service";
 export * from "./sites-issue.service";
+export * from "./work-item-version.service";

@@ -10,7 +10,7 @@ import { computedFn } from "mobx-utils";
 // hooks
 import type { TEntityDetails } from "@/hooks/use-multiple-select";
 // services
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 
 export type IMultipleSelectStore = {
   // computed functions

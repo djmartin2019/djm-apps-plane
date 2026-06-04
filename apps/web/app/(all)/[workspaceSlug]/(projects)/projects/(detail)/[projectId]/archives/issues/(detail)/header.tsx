@@ -20,7 +20,7 @@ import { useProject } from "@/hooks/store/use-project";
 // plane web
 import { ProjectBreadcrumb } from "@/plane-web/components/breadcrumbs/project";
 // services
-import { IssueService } from "@/services/issue";
+import { IssueService } from "@plane/services";
 
 const issueService = new IssueService();
 
