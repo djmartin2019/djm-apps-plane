@@ -8,7 +8,7 @@ import { API_BASE_URL } from "@plane/constants";
 import type { THomeDashboardResponse, TWidget, TWidgetStatsResponse, TWidgetStatsRequestParams } from "@plane/types";
 import { APIService } from "../api.service";
 
-export default class DashboardService extends APIService {
+export class DashboardService extends APIService {
   constructor(BASE_URL?: string) {
     super(BASE_URL || API_BASE_URL);
   }
@@ -83,5 +83,3 @@ export default class DashboardService extends APIService {
       });
   }
 }
-
-export { DashboardService };
