@@ -22,7 +22,7 @@ import { UserImageUploadModal } from "@/components/core/modals/user-image-upload
 // hooks
 import { useUser, useUserProfile } from "@/hooks/store/user";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 
 type TProfileSetupFormValues = {
   first_name: string;

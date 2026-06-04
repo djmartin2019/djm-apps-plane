@@ -22,7 +22,7 @@ import { authErrorHandler, EAuthenticationErrorCodes, passwordErrors } from "@/h
 // hooks
 import { useUser } from "@/hooks/store/user";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 
 export interface FormValues {
   old_password: string;

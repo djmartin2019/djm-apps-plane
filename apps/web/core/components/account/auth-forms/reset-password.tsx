@@ -20,7 +20,7 @@ import { getPasswordStrength } from "@plane/utils";
 import type { EAuthenticationErrorCodes, TAuthErrorInfo } from "@/helpers/authentication.helper";
 import { EErrorAlertType, authErrorHandler } from "@/helpers/authentication.helper";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 // local imports
 import { AuthBanner } from "./auth-banner";
 import { FormContainer } from "./common/container";

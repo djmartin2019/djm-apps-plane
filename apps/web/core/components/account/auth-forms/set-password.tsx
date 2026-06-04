@@ -22,7 +22,7 @@ import { getPasswordStrength } from "@plane/utils";
 import { useUser } from "@/hooks/store/user";
 import { useAppRouter } from "@/hooks/use-app-router";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 // local components
 import { FormContainer } from "./common/container";
 import { AuthFormHeader } from "./common/header";

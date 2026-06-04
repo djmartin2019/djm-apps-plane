@@ -14,7 +14,7 @@ import type { RootStore } from "@/plane-web/store/root.store";
 import type { IUserPermissionStore } from "@/plane-web/store/user/permission.store";
 import { UserPermissionStore } from "@/plane-web/store/user/permission.store";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 import { UserService } from "@/services/user.service";
 // stores
 import type { IAccountStore } from "@/store/user/account.store";

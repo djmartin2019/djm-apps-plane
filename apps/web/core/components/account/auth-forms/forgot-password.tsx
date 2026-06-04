@@ -19,7 +19,7 @@ import { cn, checkEmailValidity } from "@plane/utils";
 // hooks
 import useTimer from "@/hooks/use-timer";
 // services
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@plane/services";
 // local components
 import { FormContainer } from "./common/container";
 import { AuthFormHeader } from "./common/header";
