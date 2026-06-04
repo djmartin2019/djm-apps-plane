@@ -9,16 +9,11 @@ import { API_BASE_URL } from "@plane/constants";
 import type { TDocumentPayload, TPage } from "@plane/types";
 // helpers
 // services
-import { APIService } from "@/services/api.service";
-import { FileUploadService } from "@/services/file-upload.service";
+import { APIService } from "../api.service";
 
 export class ProjectPageService extends APIService {
-  private fileUploadService: FileUploadService;
-
   constructor() {
     super(API_BASE_URL);
-    // upload service
-    this.fileUploadService = new FileUploadService();
   }
 
   async fetchAll(workspaceSlug: string, projectId: string): Promise<TPage[]> {

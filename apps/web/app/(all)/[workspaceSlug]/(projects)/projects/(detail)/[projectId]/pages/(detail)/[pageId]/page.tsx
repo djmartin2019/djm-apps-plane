@@ -31,7 +31,7 @@ import { EPageStoreType, usePage, usePageStore } from "@/plane-web/hooks/store";
 // plane web services
 import { WorkspaceService } from "@/services/workspace.service";
 // services
-import { ProjectPageService, ProjectPageVersionService } from "@/services/page";
+import { ProjectPageService, ProjectPageVersionService } from "@plane/services";
 import type { Route } from "./+types/page";
 const workspaceService = new WorkspaceService();
 const projectPageService = new ProjectPageService();

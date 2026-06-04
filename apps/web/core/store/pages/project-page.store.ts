@@ -17,7 +17,7 @@ import { filterPagesByPageType, getPageName, orderPages, shouldFilterPage } from
 // plane web store
 import type { RootStore } from "@/plane-web/store/root.store";
 // services
-import { ProjectPageService } from "@/services/page";
+import { ProjectPageService } from "@plane/services";
 // store
 import type { CoreRootStore } from "../root.store";
 import type { TProjectPage } from "./project-page";

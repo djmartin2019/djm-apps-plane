@@ -12,13 +12,14 @@ import type { TPage } from "@plane/types";
 // plane web store
 import type { RootStore } from "@/plane-web/store/root.store";
 // services
-import { ProjectPageService } from "@/services/page";
-const projectPageService = new ProjectPageService();
+import { ProjectPageService } from "@plane/services";
 // store
 import { BasePage } from "./base-page";
 import type { TPageInstance } from "./base-page";
 
 export type TProjectPage = TPageInstance;
+
+const projectPageService = new ProjectPageService();
 
 export class ProjectPage extends BasePage implements TProjectPage {
   constructor(store: RootStore, page: TPage) {
