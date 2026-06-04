@@ -8,9 +8,9 @@
 import { API_BASE_URL } from "@plane/constants";
 // local services
 import type { TFileEntityInfo, TFileSignedURLResponse } from "@plane/types";
+import { FileService } from "./file.service";
 import { FileUploadService } from "./file-upload.service";
 // helpers
-import { FileService } from "./file.service";
 import { generateFileUploadPayload, getAssetIdFromUrl, getFileMetaDataForUpload } from "./helper";
 
 /**
