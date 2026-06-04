@@ -13,7 +13,7 @@ import type { IWorkspaceIntegration } from "@plane/types";
 import { CustomSearchSelect } from "@plane/ui";
 // helpers
 import { truncateText } from "@plane/utils";
-import { ProjectService } from "@/services/project";
+import { ProjectService } from "@plane/services";
 // types
 
 type Props = {

@@ -27,9 +27,9 @@ import { IssueFilterHelperStore } from "../helpers/issue-filter-helper.store";
 // helpers
 // types
 import type { IIssueRootStore } from "../root.store";
-import { ProjectService } from "@/services/project";
 // constants
 // services
+import { ProjectService } from "@plane/services";
 
 export interface IProjectIssuesFilter extends IBaseIssueFilterStore {
   //helper actions

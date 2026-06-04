@@ -27,7 +27,7 @@ import { usePlatformOS } from "@/hooks/use-platform-os";
 // plane web components
 import { IssueIdentifier } from "@/plane-web/components/issues/issue-details/issue-identifier";
 // services
-import { ProjectService } from "@/services/project";
+import { ProjectService } from "@plane/services";
 
 type Props = {
   isOpen: boolean;

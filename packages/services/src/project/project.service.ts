@@ -17,7 +17,7 @@ import type {
 // plane web types
 import type { TProject, TPartialProject } from "@plane/types";
 // services
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 
 export class ProjectService extends APIService {
   constructor() {

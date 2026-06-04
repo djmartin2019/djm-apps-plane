@@ -28,7 +28,7 @@ import { handleCoverImageChange } from "@/helpers/cover-image.helper";
 import { useProject } from "@/hooks/store/use-project";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // services
-import { ProjectService } from "@/services/project";
+import { ProjectService } from "@plane/services";
 // local imports
 import { ProjectNetworkIcon } from "./project-network-icon";
 
