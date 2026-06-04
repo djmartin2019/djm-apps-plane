@@ -10,7 +10,7 @@ import type { TIssueRelation, TIssue } from "@plane/types";
 // Plane-web
 import type { TIssueRelationTypes } from "@plane/types";
 // services
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 
 export class IssueRelationService extends APIService {
   constructor() {

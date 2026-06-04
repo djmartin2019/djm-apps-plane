@@ -8,7 +8,7 @@ import { API_BASE_URL } from "@plane/constants";
 import { EIssueServiceType } from "@plane/types";
 import type { TIssueCommentReaction, TIssueReaction, TIssueServiceType } from "@plane/types";
 // services
-import { APIService } from "@/services/api.service";
+import { APIService } from "../api.service";
 // types
 
 export class IssueReactionService extends APIService {

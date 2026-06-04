@@ -15,7 +15,7 @@ import type { TRelationObject } from "@/components/issues/issue-detail-widgets/r
 import { REVERSE_RELATIONS } from "@plane/constants";
 import type { TIssueRelationTypes } from "@plane/types";
 // services
-import { IssueRelationService } from "@/services/issue";
+import { IssueRelationService } from "@plane/services";
 // types
 import type { IIssueDetail } from "./root.store";
 export interface IIssueRelationStoreActions {

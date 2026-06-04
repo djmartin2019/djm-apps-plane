@@ -10,7 +10,7 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import type { TIssueReaction, TIssueReactionMap, TIssueReactionIdMap, TIssueServiceType } from "@plane/types";
 import { groupReactions } from "@plane/utils";
 // services
-import { IssueReactionService } from "@/services/issue";
+import { IssueReactionService } from "@plane/services";
 // types
 import type { IIssueDetail } from "./root.store";
 
