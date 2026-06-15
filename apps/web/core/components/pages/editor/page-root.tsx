@@ -91,9 +91,8 @@ export const PageRoot = observer(function PageRoot(props: TPageRootProps) {
   );
 
   useEffect(() => {
-    setTimeout(() => {
-      setEditorRef(editorRef.current);
-    }, 0);
+    const timer = setTimeout(() => setEditorRef(editorRef.current), 0);
+    return () => clearTimeout(timer);
   }, [isContentEditable, setEditorRef]);
 
   // Get extensions and navigation logic from hook
