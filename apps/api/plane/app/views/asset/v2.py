@@ -837,16 +837,8 @@ class DuplicateAssetEndpoint(BaseAPIView):
                 return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
 
         storage = S3Storage(request=request)
-<<<<<<< HEAD
-        # Scope the source asset to workspaces the caller is an active member of,
+        # Scope the source asset lookup to workspaces the caller is a member of,
         # so a known asset UUID cannot be copied out of another tenant.
-        member_workspace_ids = WorkspaceMember.objects.filter(
-            member=request.user, is_active=True
-        ).values_list("workspace_id", flat=True)
-        original_asset = FileAsset.objects.filter(
-            id=asset_id, is_uploaded=True, workspace_id__in=member_workspace_ids
-=======
-        # Scope the source asset lookup to workspaces the caller is a member of
         user_workspace_ids = WorkspaceMember.objects.filter(
             member=request.user,
             is_active=True,
@@ -855,13 +847,11 @@ class DuplicateAssetEndpoint(BaseAPIView):
             id=asset_id,
             is_uploaded=True,
             workspace_id__in=user_workspace_ids,
->>>>>>> fd16d033fccb37f18e8794df739c8c24ba9d7939
         ).first()
 
         if not original_asset:
             return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
 
-<<<<<<< HEAD
         # If the source asset belongs to a project, the caller must be a member of
         # that project (guards secret-project assets from cross-project duplication).
         if original_asset.project_id and not ProjectMember.objects.filter(
@@ -871,11 +861,8 @@ class DuplicateAssetEndpoint(BaseAPIView):
         ).exists():
             return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        destination_key = f"{workspace.id}/{uuid.uuid4().hex}-{original_asset.attributes.get('name')}"
-=======
         sanitized_name = sanitize_filename(original_asset.attributes.get("name")) or "unnamed"
         destination_key = f"{workspace.id}/{uuid.uuid4().hex}-{sanitized_name}"
->>>>>>> fd16d033fccb37f18e8794df739c8c24ba9d7939
         duplicated_asset = FileAsset.objects.create(
             attributes={
                 "name": original_asset.attributes.get("name"),

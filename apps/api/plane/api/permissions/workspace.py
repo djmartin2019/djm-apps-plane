@@ -4,11 +4,17 @@
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from plane.app.permissions import ROLE
 from plane.db.models import WorkspaceMember
 
 
-Admin = 20
-Member = 15
+def get_workspace_slug(view):
+    """Resolve the workspace slug from the view, returning None when it is absent.
+
+    Accessing ``view.workspace_slug`` directly would raise ``AttributeError`` (and a
+    500) on a view that does not expose it; returning None lets the caller deny cleanly.
+    """
+    return getattr(view, "workspace_slug", None)
 
 
 class WorkspaceAdminOnlyPermission(BasePermission):
@@ -17,13 +23,18 @@ class WorkspaceAdminOnlyPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
+        """Allow only active workspace admins."""
         if request.user.is_anonymous:
+            return False
+
+        workspace_slug = get_workspace_slug(view)
+        if not workspace_slug:
             return False
 
         return WorkspaceMember.objects.filter(
             member=request.user,
-            workspace__slug=view.workspace_slug,
-            role=Admin,
+            workspace__slug=workspace_slug,
+            role=ROLE.ADMIN.value,
             is_active=True,
         ).exists()
 
@@ -35,20 +46,25 @@ class WorkspaceAdminWriteMemberReadPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
+        """Allow active members to read and restrict writes to active admins."""
         if request.user.is_anonymous:
+            return False
+
+        workspace_slug = get_workspace_slug(view)
+        if not workspace_slug:
             return False
 
         if request.method in SAFE_METHODS:
             return WorkspaceMember.objects.filter(
                 member=request.user,
-                workspace__slug=view.workspace_slug,
-                role__in=[Admin, Member],
+                workspace__slug=workspace_slug,
+                role__in=[ROLE.ADMIN.value, ROLE.MEMBER.value],
                 is_active=True,
             ).exists()
 
         return WorkspaceMember.objects.filter(
             member=request.user,
-            workspace__slug=view.workspace_slug,
-            role=Admin,
+            workspace__slug=workspace_slug,
+            role=ROLE.ADMIN.value,
             is_active=True,
         ).exists()
