@@ -1769,6 +1769,7 @@ class IssueAttachmentListCreateAPIEndpoint(BaseAPIView):
 
     serializer_class = IssueAttachmentSerializer
     model = FileAsset
+    permission_classes = [ProjectEntityPermission]
     use_read_replica = True
 
     @issue_attachment_docs(
@@ -1984,6 +1985,7 @@ class IssueAttachmentDetailAPIEndpoint(BaseAPIView):
 
     serializer_class = IssueAttachmentSerializer
     model = FileAsset
+    permission_classes = [ProjectEntityPermission]
     use_read_replica = True
 
     @issue_attachment_docs(

@@ -263,6 +263,11 @@ class IssueCommentPublicViewSet(BaseViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # The target issue must belong to the board's project; otherwise an
+        # attacker could attach comments to issues in other projects/workspaces.
+        if not Issue.objects.filter(id=issue_id, project_id=project_deploy_board.project_id).exists():
+            return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = IssueCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(
@@ -372,6 +377,10 @@ class IssueReactionPublicViewSet(BaseViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # The target issue must belong to the board's project.
+        if not Issue.objects.filter(id=issue_id, project_id=project_deploy_board.project_id).exists():
+            return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = IssueReactionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(
@@ -456,6 +465,10 @@ class CommentReactionPublicViewSet(BaseViewSet):
                 {"error": "Reactions are not enabled for this board"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # The target comment must belong to the board's project.
+        if not IssueComment.objects.filter(id=comment_id, project_id=project_deploy_board.project_id).exists():
+            return Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = CommentReactionSerializer(data=request.data)
         if serializer.is_valid():
@@ -542,6 +555,9 @@ class IssueVotePublicViewSet(BaseViewSet):
 
     def create(self, request, anchor, issue_id):
         project_deploy_board = DeployBoard.objects.get(anchor=anchor, entity_name="project")
+        # The target issue must belong to the board's project.
+        if not Issue.objects.filter(id=issue_id, project_id=project_deploy_board.project_id).exists():
+            return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
         issue_vote, _ = IssueVote.objects.get_or_create(
             actor_id=request.user.id,
             project_id=project_deploy_board.project_id,

@@ -18,7 +18,14 @@ from rest_framework.permissions import AllowAny
 
 # Module imports
 from ..base import BaseAPIView
-from plane.db.models import FileAsset, Workspace, Project, User
+from plane.db.models import (
+    FileAsset,
+    Workspace,
+    Project,
+    User,
+    WorkspaceMember,
+    ProjectMember,
+)
 from plane.settings.storage import S3Storage
 from plane.app.permissions import allow_permission, ROLE
 from plane.utils.cache import invalidate_cache_directly
@@ -201,6 +208,52 @@ class UserAssetsV2Endpoint(BaseAPIView):
 class WorkspaceFileAssetEndpoint(BaseAPIView):
     """This endpoint is used to upload cover images/logos etc for workspace, projects and users."""
 
+    def is_workspace_admin(self, request, slug):
+        return WorkspaceMember.objects.filter(
+            member=request.user,
+            workspace__slug=slug,
+            role=ROLE.ADMIN.value,
+            is_active=True,
+        ).exists()
+
+    def is_project_admin(self, request, slug, project_id):
+        if not project_id:
+            return False
+        return ProjectMember.objects.filter(
+            member=request.user,
+            workspace__slug=slug,
+            project_id=project_id,
+            role=ROLE.ADMIN.value,
+            is_active=True,
+        ).exists()
+
+    def has_project_access(self, request, slug, project_id):
+        if not project_id:
+            return False
+        return ProjectMember.objects.filter(
+            member=request.user,
+            workspace__slug=slug,
+            project_id=project_id,
+            is_active=True,
+        ).exists()
+
+    def authorize_entity_mutation(self, request, slug, entity_type, project_id):
+        """Logo/cover mutations require admin on the owning scope. Returns an error
+        response when the caller is not authorized, otherwise None."""
+        if entity_type == FileAsset.EntityTypeContext.WORKSPACE_LOGO and not self.is_workspace_admin(request, slug):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if entity_type == FileAsset.EntityTypeContext.PROJECT_COVER and not self.is_project_admin(
+            request, slug, project_id
+        ):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        return None
+
     def get_entity_id_field(self, entity_type, entity_id):
         # Workspace Logo
         if entity_type == FileAsset.EntityTypeContext.WORKSPACE_LOGO:
@@ -311,6 +364,7 @@ class WorkspaceFileAssetEndpoint(BaseAPIView):
         else:
             return
 
+    @allow_permission([ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST], level="WORKSPACE")
     def post(self, request, slug):
         name = request.data.get("name")
         type = request.data.get("type", "image/jpeg")
@@ -324,6 +378,16 @@ class WorkspaceFileAssetEndpoint(BaseAPIView):
                 {"error": "Invalid entity type.", "status": False},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # Logo/cover assets may only be created by an admin of the owning scope
+        project_identifier = entity_identifier if entity_type == FileAsset.EntityTypeContext.PROJECT_COVER else None
+        if entity_type == FileAsset.EntityTypeContext.PROJECT_COVER and not Project.objects.filter(
+            id=project_identifier, workspace__slug=slug
+        ).exists():
+            return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+        unauthorized = self.authorize_entity_mutation(request, slug, entity_type, project_identifier)
+        if unauthorized:
+            return unauthorized
 
         # Check if the file type is allowed
         allowed_types = [
@@ -376,9 +440,14 @@ class WorkspaceFileAssetEndpoint(BaseAPIView):
             status=status.HTTP_200_OK,
         )
 
+    @allow_permission([ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST], level="WORKSPACE")
     def patch(self, request, slug, asset_id):
         # get the asset id
         asset = FileAsset.objects.get(id=asset_id, workspace__slug=slug)
+        # Logo/cover mutations require admin on the owning scope
+        unauthorized = self.authorize_entity_mutation(request, slug, asset.entity_type, asset.project_id)
+        if unauthorized:
+            return unauthorized
         # get the storage metadata
         asset.is_uploaded = True
         # get the storage metadata
@@ -397,8 +466,13 @@ class WorkspaceFileAssetEndpoint(BaseAPIView):
         asset.save(update_fields=["is_uploaded", "attributes"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @allow_permission([ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST], level="WORKSPACE")
     def delete(self, request, slug, asset_id):
         asset = FileAsset.objects.get(id=asset_id, workspace__slug=slug)
+        # Logo/cover mutations require admin on the owning scope
+        unauthorized = self.authorize_entity_mutation(request, slug, asset.entity_type, asset.project_id)
+        if unauthorized:
+            return unauthorized
         asset.is_deleted = True
         asset.deleted_at = timezone.now()
         # get the entity and save the asset id for the request field
@@ -406,9 +480,18 @@ class WorkspaceFileAssetEndpoint(BaseAPIView):
         asset.save(update_fields=["is_deleted", "deleted_at"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @allow_permission([ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST], level="WORKSPACE")
     def get(self, request, slug, asset_id):
         # get the asset id
         asset = FileAsset.objects.get(id=asset_id, workspace__slug=slug)
+
+        # Project-bound assets must not be readable by workspace members who are
+        # not members of the owning project (e.g. secret projects).
+        if asset.project_id and not self.has_project_access(request, slug, asset.project_id):
+            return Response(
+                {"error": "The requested asset could not be found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         # Check if the asset is uploaded
         if not asset.is_uploaded:
@@ -641,8 +724,9 @@ class ProjectBulkAssetEndpoint(BaseAPIView):
         if not asset_ids:
             return Response({"error": "No asset ids provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # get the asset id
-        assets = FileAsset.objects.filter(id__in=asset_ids, workspace__slug=slug)
+        # get the asset id — scope to the URL project so assets from sibling
+        # projects in the same workspace cannot be hijacked/reassigned.
+        assets = FileAsset.objects.filter(id__in=asset_ids, workspace__slug=slug, project_id=project_id)
 
         # Get the first asset
         asset = assets.first()
@@ -752,9 +836,25 @@ class DuplicateAssetEndpoint(BaseAPIView):
                 return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
 
         storage = S3Storage(request=request)
-        original_asset = FileAsset.objects.filter(id=asset_id, is_uploaded=True).first()
+        # Scope the source asset to workspaces the caller is an active member of,
+        # so a known asset UUID cannot be copied out of another tenant.
+        member_workspace_ids = WorkspaceMember.objects.filter(
+            member=request.user, is_active=True
+        ).values_list("workspace_id", flat=True)
+        original_asset = FileAsset.objects.filter(
+            id=asset_id, is_uploaded=True, workspace_id__in=member_workspace_ids
+        ).first()
 
         if not original_asset:
+            return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # If the source asset belongs to a project, the caller must be a member of
+        # that project (guards secret-project assets from cross-project duplication).
+        if original_asset.project_id and not ProjectMember.objects.filter(
+            member=request.user,
+            project_id=original_asset.project_id,
+            is_active=True,
+        ).exists():
             return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
 
         destination_key = f"{workspace.id}/{uuid.uuid4().hex}-{original_asset.attributes.get('name')}"
@@ -792,6 +892,22 @@ class WorkspaceAssetDownloadEndpoint(BaseAPIView):
                 is_uploaded=True,
             )
         except FileAsset.DoesNotExist:
+            return Response(
+                {"error": "The requested asset could not be found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Project-bound assets must not be downloadable by workspace members who
+        # are not members of the owning project (e.g. secret projects).
+        if (
+            asset.project_id
+            and not ProjectMember.objects.filter(
+                member=request.user,
+                workspace__slug=slug,
+                project_id=asset.project_id,
+                is_active=True,
+            ).exists()
+        ):
             return Response(
                 {"error": "The requested asset could not be found."},
                 status=status.HTTP_404_NOT_FOUND,

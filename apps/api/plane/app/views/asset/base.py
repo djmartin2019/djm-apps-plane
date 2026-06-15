@@ -9,8 +9,20 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # Module imports
 from ..base import BaseAPIView, BaseViewSet
-from plane.db.models import FileAsset, Workspace
+from plane.db.models import FileAsset, Workspace, WorkspaceMember
 from plane.app.serializers import FileAssetSerializer
+
+
+def _is_workspace_member(user, *, workspace_id=None, slug=None):
+    """Return True when the user is an active member of the given workspace."""
+    if user.is_anonymous:
+        return False
+    filters = {"member": user, "is_active": True}
+    if workspace_id is not None:
+        filters["workspace_id"] = workspace_id
+    if slug is not None:
+        filters["workspace__slug"] = slug
+    return WorkspaceMember.objects.filter(**filters).exists()
 
 
 class FileAssetEndpoint(BaseAPIView):
@@ -21,6 +33,11 @@ class FileAssetEndpoint(BaseAPIView):
     """
 
     def get(self, request, workspace_id, asset_key):
+        if not _is_workspace_member(request.user, workspace_id=workspace_id):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         asset_key = str(workspace_id) + "/" + asset_key
         files = FileAsset.objects.filter(asset=asset_key)
         if files.exists():
@@ -33,6 +50,11 @@ class FileAssetEndpoint(BaseAPIView):
             )
 
     def post(self, request, slug):
+        if not _is_workspace_member(request.user, slug=slug):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         serializer = FileAssetSerializer(data=request.data)
         if serializer.is_valid():
             # Get the workspace
@@ -42,6 +64,11 @@ class FileAssetEndpoint(BaseAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, workspace_id, asset_key):
+        if not _is_workspace_member(request.user, workspace_id=workspace_id):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         asset_key = str(workspace_id) + "/" + asset_key
         file_asset = FileAsset.objects.get(asset=asset_key)
         file_asset.is_deleted = True
@@ -51,6 +78,11 @@ class FileAssetEndpoint(BaseAPIView):
 
 class FileAssetViewSet(BaseViewSet):
     def restore(self, request, workspace_id, asset_key):
+        if not _is_workspace_member(request.user, workspace_id=workspace_id):
+            return Response(
+                {"error": "You don't have the required permissions."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         asset_key = str(workspace_id) + "/" + asset_key
         file_asset = FileAsset.objects.get(asset=asset_key)
         file_asset.is_deleted = False

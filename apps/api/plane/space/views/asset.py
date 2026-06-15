@@ -41,9 +41,11 @@ class EntityAssetEndpoint(BaseAPIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # get the asset id
+        # get the asset id — scope to the board's project so an anchor cannot
+        # reach assets of other (including unpublished/secret) projects.
         asset = FileAsset.objects.get(
             workspace_id=deploy_board.workspace_id,
+            project_id=deploy_board.project_id,
             pk=pk,
             entity_type__in=[
                 FileAsset.EntityTypeContext.ISSUE_DESCRIPTION,
@@ -139,8 +141,9 @@ class EntityAssetEndpoint(BaseAPIView):
         if not deploy_board:
             return Response({"error": "Project is not published"}, status=status.HTTP_404_NOT_FOUND)
 
-        # get the asset id
-        asset = FileAsset.objects.get(id=pk, workspace=deploy_board.workspace)
+        # get the asset id — scope to the board's project so an anchor cannot
+        # mutate assets of other projects in the same workspace.
+        asset = FileAsset.objects.get(id=pk, workspace=deploy_board.workspace, project_id=deploy_board.project_id)
         # get the storage metadata
         asset.is_uploaded = True
         # get the storage metadata
@@ -179,8 +182,9 @@ class AssetRestoreEndpoint(BaseAPIView):
         if not deploy_board:
             return Response({"error": "Project is not published"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Get the asset
-        asset = FileAsset.all_objects.get(id=pk, workspace=deploy_board.workspace)
+        # Get the asset — scope to the board's project so an anchor cannot
+        # restore assets of other projects in the same workspace.
+        asset = FileAsset.all_objects.get(id=pk, workspace=deploy_board.workspace, project_id=deploy_board.project_id)
         asset.is_deleted = False
         asset.deleted_at = None
         asset.save(update_fields=["is_deleted", "deleted_at"])
