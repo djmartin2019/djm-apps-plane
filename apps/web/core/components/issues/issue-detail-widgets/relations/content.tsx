@@ -17,7 +17,7 @@ import { CreateUpdateIssueModal } from "@/components/issues/issue-modal/modal";
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 // Plane-web
 import { CreateUpdateEpicModal } from "@/components/epic-modal";
-import { useTimeLineRelationOptions } from "@/plane-web/components/relations";
+import { useTimeLineRelationOptions } from "@/components/relations";
 // helper
 import { DeleteIssueModal } from "../../delete-issue-modal";
 import { RelationIssueList } from "../../relations/issue-list";

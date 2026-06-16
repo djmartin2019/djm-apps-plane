@@ -11,7 +11,7 @@ import { getValidKeysFromObject } from "@plane/utils";
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 // plane web components
 import { IssueTypeActivity, AdditionalActivityRoot } from "@/plane-web/components/issues/issue-details";
-import { useTimeLineRelationOptions } from "@/plane-web/components/relations";
+import { useTimeLineRelationOptions } from "@/components/relations";
 // local components
 import {
   IssueDefaultActivity,
@@ -44,6 +44,7 @@ export const IssueActivityItem = observer(function IssueActivityItem(props: TIss
   // hooks
   const {
     activity: { getActivityById },
+    // oxlint-disable-next-line no-empty-pattern
     comment: {},
   } = useIssueDetail();
   const ISSUE_RELATION_OPTIONS = useTimeLineRelationOptions();

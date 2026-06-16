@@ -9,8 +9,6 @@ import { RelatedIcon, DuplicatePropertyIcon } from "@plane/propel/icons";
 import type { TRelationObject } from "@/components/issues/issue-detail-widgets/relations";
 import type { TIssueRelationTypes } from "@plane/types";
 
-export * from "./activity";
-
 export const ISSUE_RELATION_OPTIONS: Record<TIssueRelationTypes, TRelationObject> = {
   relates_to: {
     key: "relates_to",
