@@ -6,7 +6,7 @@
 
 import React from "react";
 // components
-import { SidebarChart } from "./base";
+import { SidebarChart } from "./sidebar-chart";
 
 type Props = {
   workspaceSlug: string;
