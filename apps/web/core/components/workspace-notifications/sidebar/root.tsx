@@ -19,7 +19,7 @@ import { CountChip } from "@/components/common/count-chip";
 import { useWorkspaceNotifications } from "@/hooks/store/notifications";
 import { useWorkspace } from "@/hooks/store/use-workspace";
 // plane web components
-import { NotificationListRoot } from "@/plane-web/components/workspace-notifications/list-root";
+import { NotificationListRoot } from "@/components/workspace-notifications/list-root";
 // local imports
 import { NotificationEmptyState } from "./empty-state";
 import { AppliedFilters } from "./filters/applied-filter";
@@ -69,6 +69,7 @@ export const NotificationsSidebarRoot = observer(function NotificationsSidebarRo
 
         <Header variant={EHeaderVariant.SECONDARY} className="justify-start">
           {NOTIFICATION_TABS.map((tab) => (
+            // oxlint-disable-next-line jsx_a11y/click-events-have-key-events oxlint-disable-next-line jsx_a11y/no-static-element-interactions
             <div
               key={tab.value}
               className="relative h-full cursor-pointer px-3"
