@@ -78,6 +78,7 @@ export const ProductUpdatesChangelog = observer(function ProductUpdatesChangelog
           <Loader.Item height="95%" width="95%" />
         </Loader>
       )}
+      {/* eslint-disable-next-line react/iframe-missing-sandbox oxlint-disable-next-line jsx_a11y/iframe-has-title */}
       <iframe
         src={changeLogUrl}
         className={`h-full w-full ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-200`}
