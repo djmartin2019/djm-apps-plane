@@ -17,7 +17,7 @@ import { AppSidebarItem } from "@/components/sidebar/sidebar-item";
 import { useAppRailPreferences } from "@/hooks/use-navigation-preferences";
 import { useAppRailVisibility } from "@/lib/app-rail/context";
 // plane web imports
-import { DesktopSidebarWorkspaceMenu } from "@/plane-web/components/desktop";
+import { DesktopSidebarWorkspaceMenu } from "@/components/desktop";
 // local imports
 import { AppSidebarItemsRoot } from "./items-root";
 
