@@ -34,6 +34,7 @@ export const useMemberColumns = () => {
   // derived values
   const isAdmin = allowPermissions([EUserPermissions.ADMIN], EUserPermissionsLevel.WORKSPACE);
 
+  // oxlint-disable-next-line unicorn/consistent-function-scoping
   const isSuspended = (rowData: RowData) => rowData.is_active === false;
 
   // handlers

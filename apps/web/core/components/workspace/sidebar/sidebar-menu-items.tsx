@@ -28,7 +28,7 @@ import {
   useWorkspaceNavigationPreferences,
 } from "@/hooks/use-navigation-preferences";
 // plane-web imports
-import { SidebarItem } from "@/plane-web/components/workspace/sidebar/sidebar-item";
+import { SidebarItem } from "@/components/workspace/sidebar/sidebar-item-wrapper";
 
 export const SidebarMenuItems = observer(function SidebarMenuItems() {
   // routers
@@ -84,6 +84,7 @@ export const SidebarMenuItems = observer(function SidebarMenuItems() {
 
   const sortedNavigationItems = useMemo(
     () =>
+      // oxlint-disable-next-line oxc/no-map-spread
       WORKSPACE_SIDEBAR_DYNAMIC_NAVIGATION_ITEMS_LINKS.map((item) => {
         const preference = workspacePreferences.items[item.key];
         return {
@@ -98,6 +99,7 @@ export const SidebarMenuItems = observer(function SidebarMenuItems() {
     <>
       <div className="flex flex-col gap-0.5">
         {filteredStaticNavigationItems.map((item, _index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <SidebarItem key={`static_${_index}`} item={item} />
         ))}
       </div>
@@ -149,9 +151,11 @@ export const SidebarMenuItems = observer(function SidebarMenuItems() {
             <Disclosure.Panel as="div" className="flex flex-col gap-0.5" static>
               <>
                 {WORKSPACE_SIDEBAR_STATIC_PINNED_NAVIGATION_ITEMS_LINKS.map((item, _index) => (
+                  // oxlint-disable-next-line react/no-array-index-key
                   <SidebarItem key={`static_${_index}`} item={item} />
                 ))}
                 {sortedNavigationItems.map((item, _index) => (
+                  // oxlint-disable-next-line react/no-array-index-key
                   <SidebarItem key={`dynamic_${_index}`} item={item} />
                 ))}
                 <SidebarNavItem>
