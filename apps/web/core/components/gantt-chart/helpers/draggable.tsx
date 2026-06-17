@@ -14,7 +14,6 @@ import { cn } from "@plane/utils";
 // components
 import { LeftResizable } from "./blockResizables/left-resizable";
 import { RightResizable } from "./blockResizables/right-resizable";
-import { RightDependencyDraggable, LeftDependencyDraggable } from "../dependency";
 
 type Props = {
   block: IGanttBlock;
@@ -36,17 +35,11 @@ export const ChartDraggable = observer(function ChartDraggable(props: Props) {
     enableBlockLeftResize,
     enableBlockRightResize,
     enableBlockMove,
-    enableDependency,
     isMoving,
-    ganttContainerRef,
   } = props;
 
   return (
     <div className="group relative z-[5] inline-flex h-full w-full cursor-pointer items-center font-medium transition-all">
-      {/* left resize drag handle */}
-      {(typeof enableDependency === "function" ? enableDependency(block.id) : enableDependency) && (
-        <LeftDependencyDraggable block={block} ganttContainerRef={ganttContainerRef} />
-      )}
       <LeftResizable
         enableBlockLeftResize={enableBlockLeftResize}
         handleBlockDrag={handleBlockDrag}
@@ -69,9 +62,6 @@ export const ChartDraggable = observer(function ChartDraggable(props: Props) {
         isMoving={isMoving}
         position={block.position}
       />
-      {(typeof enableDependency === "function" ? enableDependency(block.id) : enableDependency) && (
-        <RightDependencyDraggable block={block} ganttContainerRef={ganttContainerRef} />
-      )}
     </div>
   );
 });

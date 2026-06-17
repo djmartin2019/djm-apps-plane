@@ -10,9 +10,6 @@ import { Circle } from "lucide-react";
 import { ChevronDownIcon, ChevronUpIcon } from "@plane/propel/icons";
 // Plane
 import type { TIssueGroupByOptions, TIssueKanbanFilters } from "@plane/types";
-// Plane-web
-import { WorkFlowGroupTree } from "@/components/workflow";
-// mobx
 
 interface IHeaderSubGroupByCard {
   icon?: React.ReactNode;
@@ -25,7 +22,7 @@ interface IHeaderSubGroupByCard {
 }
 
 export const HeaderSubGroupByCard = observer(function HeaderSubGroupByCard(props: IHeaderSubGroupByCard) {
-  const { icon, title, count, column_id, collapsedGroups, sub_group_by, handleCollapsedGroups } = props;
+  const { icon, title, count, column_id, collapsedGroups, handleCollapsedGroups } = props;
   return (
     // oxlint-disable-next-line jsx_a11y/click-events-have-key-events oxlint-disable-next-line jsx_a11y/no-static-element-interactions
     <div
@@ -48,8 +45,6 @@ export const HeaderSubGroupByCard = observer(function HeaderSubGroupByCard(props
         <div className="line-clamp-1 text-primary">{title}</div>
         <div className="pl-2 text-13 font-medium text-tertiary">{count || 0}</div>
       </div>
-
-      <WorkFlowGroupTree groupBy={sub_group_by} groupId={column_id} />
     </div>
   );
 });

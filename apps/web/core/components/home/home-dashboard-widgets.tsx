@@ -15,7 +15,6 @@ import darkWidgetsAsset from "@/app/assets/empty-state/dashboard/widgets-dark.we
 import lightWidgetsAsset from "@/app/assets/empty-state/dashboard/widgets-light.webp?url";
 // components
 import { SimpleEmptyState } from "@/components/empty-state/simple-empty-state-root";
-import { HomePageHeader } from "@/components/home/header";
 // hooks
 import { useHome } from "@/hooks/store/use-home";
 import { useProject } from "@/hooks/store/use-project";
@@ -82,7 +81,6 @@ export const DashboardWidgets = observer(function DashboardWidgets() {
 
   return (
     <div className="relative flex h-full w-full flex-col gap-7">
-      <HomePageHeader />
       <ManageWidgetsModal
         workspaceSlug={workspaceSlug.toString()}
         isModalOpen={showWidgetSettings}

@@ -24,8 +24,6 @@ import { useIssueStoreType } from "@/hooks/use-issue-layout-store";
 import type { TSelectionHelper } from "@/hooks/use-multiple-select";
 // plane-web
 import { CreateUpdateEpicModal } from "@/components/epic-modal";
-// Plane-web
-import { WorkFlowGroupTree } from "@/components/workflow";
 
 interface IHeaderGroupByCard {
   groupID: string;
@@ -45,7 +43,6 @@ interface IHeaderGroupByCard {
 export const HeaderGroupByCard = observer(function HeaderGroupByCard(props: IHeaderGroupByCard) {
   const {
     groupID,
-    groupBy,
     icon,
     title,
     count,
@@ -121,9 +118,7 @@ export const HeaderGroupByCard = observer(function HeaderGroupByCard(props: IHea
         >
           <div className="line-clamp-1 inline-block truncate font-medium text-primary">{title}</div>
           <div className="pl-2 text-13 font-medium text-tertiary">{count || 0}</div>
-          <div className="px-2.5">
-            <WorkFlowGroupTree groupBy={groupBy} groupId={groupID} />
-          </div>
+          <div className="px-2.5"></div>
         </div>
 
         {!disableIssueCreation &&

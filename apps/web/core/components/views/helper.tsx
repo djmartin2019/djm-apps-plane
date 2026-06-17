@@ -51,7 +51,7 @@ export function WorkspaceActiveLayout(props: TWorkspaceLayoutProps) {
         />
       );
     default:
-      return <WorkspaceAdditionalLayouts {...props} />;
+      return <></>;
   }
 }
 
@@ -60,11 +60,3 @@ export type TLayoutSelectionProps = {
   selectedLayout: EIssueLayoutTypes;
   workspaceSlug: string;
 };
-
-export function GlobalViewLayoutSelection(_props: TLayoutSelectionProps) {
-  return <></>;
-}
-
-export function WorkspaceAdditionalLayouts(_props: TWorkspaceLayoutProps) {
-  return <></>;
-}

@@ -30,8 +30,6 @@ import { useBulkOperationStatus } from "@/hooks/use-bulk-operation-status";
 import { DEFAULT_BLOCK_WIDTH, GANTT_SELECT_GROUP, HEADER_HEIGHT } from "../constants";
 import { getItemPositionWidth } from "../views";
 import { TimelineDragHelper } from "./timeline-drag-helper";
-import { TimelineDependencyPaths, TimelineDraggablePath } from "../dependency";
-import { GanttAdditionalLayers } from "../layers";
 
 type Props = {
   blockIds: string[];
@@ -215,9 +213,6 @@ export const GanttChartMainContent = observer(function GanttChartMainContent(pro
                       selectionHelpers={helpers}
                       ganttContainerRef={ganttContainerRef}
                     />
-                    <TimelineDependencyPaths isEpic={isEpic} />
-                    <TimelineDraggablePath />
-                    <GanttAdditionalLayers itemsContainerWidth={itemsContainerWidth} blockCount={blockIds.length} />
                     <GanttChartBlocksList
                       blockIds={blockIds}
                       blockToRender={blockToRender}
