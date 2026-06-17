@@ -18,7 +18,7 @@ import { FilterOption } from "@/components/issues/issue-layouts/filters";
 // hooks
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // plane web components
-import { FilterByAccess } from "@/plane-web/components/views/filters/access-filter";
+import { FilterByAccess } from "@/components/views/filters/access-filter";
 
 type Props = {
   filters: TViewFilters;
@@ -68,6 +68,7 @@ export const ViewFiltersSelection = observer(function ViewFiltersSelection(props
             placeholder="Search"
             value={filtersSearchQuery}
             onChange={(e) => setFiltersSearchQuery(e.target.value)}
+            // oxlint-disable-next-line jsx_a11y/no-autofocus
             autoFocus={!isMobile}
           />
           {filtersSearchQuery !== "" && (
