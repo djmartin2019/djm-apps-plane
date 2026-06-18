@@ -45,9 +45,6 @@ import { useProjectState } from "@/hooks/store/use-project-state";
 import { useWorkspaceDraftIssues } from "@/hooks/store/workspace-draft";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 import { useProjectIssueProperties } from "@/hooks/use-project-issue-properties";
-// plane web imports
-import { IssueTypeSelect, WorkItemTemplateSelect } from "@/plane-web/components/issues/issue-modal";
-import { WorkItemModalAdditionalProperties } from "@/plane-web/components/issues/issue-modal/modal-additional-properties";
 
 export interface IssueFormProps {
   data?: Partial<TIssue>;
@@ -93,7 +90,6 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
       default: `${data?.id ? t("update") : isDraft ? t("save_to_drafts") : t("save")}`,
       loading: `${data?.id ? t("updating") : t("saving")}`,
     },
-    handleDraftAndClose,
     isProjectSelectionDisabled = false,
     showActionButtons = true,
     dataResetProperties = [],
@@ -372,31 +368,6 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
                     disabled={!!data?.id || !!data?.sourceIssueId || isProjectSelectionDisabled}
                     handleFormChange={handleFormChange}
                   />
-                  {projectId && (
-                    <IssueTypeSelect
-                      control={control}
-                      projectId={projectId}
-                      editorRef={editorRef}
-                      disabled={!!data?.sourceIssueId}
-                      handleFormChange={handleFormChange}
-                      renderChevron
-                    />
-                  )}
-                  {projectId && !data?.id && !data?.sourceIssueId && (
-                    <WorkItemTemplateSelect
-                      projectId={projectId}
-                      typeId={watch("type_id")}
-                      handleModalClose={() => {
-                        if (handleDraftAndClose) {
-                          handleDraftAndClose();
-                        } else {
-                          onClose();
-                        }
-                      }}
-                      handleFormChange={handleFormChange}
-                      renderChevron
-                    />
-                  )}
                 </div>
               </div>
               {watch("parent_id") && selectedParentIssue && (
@@ -447,12 +418,6 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
                   onClose={onClose}
                 />
               </div>
-              <WorkItemModalAdditionalProperties
-                isDraft={isDraft}
-                workItemId={data?.id ?? data?.sourceIssueId}
-                projectId={projectId}
-                workspaceSlug={workspaceSlug?.toString()}
-              />
             </div>
             <div
               className={cn(

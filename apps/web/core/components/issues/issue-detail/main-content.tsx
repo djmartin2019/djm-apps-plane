@@ -21,7 +21,7 @@ import { useUser } from "@/hooks/store/user";
 import useReloadConfirmations from "@/hooks/use-reload-confirmation";
 import useSize from "@/hooks/use-window-size";
 // plane web components
-import { IssueTypeSwitcher } from "@/plane-web/components/issues/issue-details/issue-type-switcher";
+import { IssueTypeSwitcher } from "@/components/issues/issue-type-switcher";
 // services
 import { WorkItemVersionService } from "@/services/issue";
 // local imports

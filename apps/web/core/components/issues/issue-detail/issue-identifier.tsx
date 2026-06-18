@@ -6,7 +6,7 @@
 
 import { observer } from "mobx-react";
 // plane imports
-import type { TIssueIdentifierProps, TIssueTypeIdentifier } from "@plane/types";
+import type { TIssueIdentifierProps } from "@plane/types";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useProject } from "@/hooks/store/use-project";
@@ -39,8 +39,4 @@ export const IssueIdentifier = observer(function IssueIdentifier(props: TIssueId
       />
     </div>
   );
-});
-
-export const IssueTypeIdentifier = observer(function IssueTypeIdentifier(_props: TIssueTypeIdentifier) {
-  return <></>;
 });

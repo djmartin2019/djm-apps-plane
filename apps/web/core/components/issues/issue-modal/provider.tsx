@@ -31,6 +31,7 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
 
   return (
     <IssueModalContext.Provider
+      // oxlint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         allowedProjectIds: allowedProjectIds ?? projectIdsWithCreatePermissions,
         workItemTemplateId: null,
