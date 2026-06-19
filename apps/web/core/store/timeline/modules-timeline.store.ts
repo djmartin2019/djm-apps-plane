@@ -5,7 +5,7 @@
  */
 
 import { autorun } from "mobx";
-import type { CoreRootStore as RootStore } from "@/store/root.store";
+import type { RootStore } from "@/store/root.store";
 import { BaseTimeLineStore } from "@/store/timeline/base-timeline.store";
 import type { IBaseTimelineStore } from "@/store/timeline/base-timeline.store";
 

@@ -24,7 +24,7 @@ import {
 } from "@/components/gantt-chart/views/helpers";
 // helpers
 // store
-import type { CoreRootStore as RootStore } from "@/store/root.store";
+import type { RootStore } from "@/store/root.store";
 
 // types
 type BlockData = {
