@@ -10,7 +10,6 @@ import { computedFn } from "mobx-utils";
 // types
 import type { EUserPermissions } from "@plane/constants";
 import type { IWorkspaceBulkInviteFormData, IWorkspaceMember, IWorkspaceMemberInvitation } from "@plane/types";
-// plane-web constants
 // services
 import { WorkspaceService } from "@/services/workspace.service";
 // types
