@@ -102,6 +102,14 @@ class GoogleOAuthProvider(OauthAdapter):
 
     def set_user_data(self):
         user_info_response = self.get_user_response()
+        # Reject unverified emails — an attacker-controlled provider could otherwise assert
+        # any email to match an existing account (GHSA-7j95-vh8g-f365). Default True so
+        # service accounts that omit the field are not broken.
+        if not user_info_response.get("verified_email", True):
+            raise AuthenticationException(
+                error_code=AUTHENTICATION_ERROR_CODES["OAUTH_PROVIDER_UNVERIFIED_EMAIL"],
+                error_message="OAUTH_PROVIDER_UNVERIFIED_EMAIL",
+            )
         user_data = {
             "email": user_info_response.get("email"),
             "user": {
