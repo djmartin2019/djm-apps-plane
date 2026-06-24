@@ -19,7 +19,7 @@ from plane.authentication.adapter.error import (
 
 class GiteaOAuthProvider(OauthAdapter):
     provider = "gitea"
-    scope = "openid email profile"
+    scope = "openid email profile read:user"
 
     def __init__(self, request, code=None, state=None, callback=None):
         (GITEA_CLIENT_ID, GITEA_CLIENT_SECRET, GITEA_HOST) = get_configuration_value(
