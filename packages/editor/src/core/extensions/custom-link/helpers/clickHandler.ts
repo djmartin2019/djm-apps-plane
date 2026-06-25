@@ -40,6 +40,15 @@ export function clickHandler(options: ClickHandlerOptions): Plugin {
         const target = link?.target ?? attrs.target;
 
         if (link && href) {
+          // Defence-in-depth: link.href is the browser-resolved URL (whitespace
+          // already stripped by the browser's WHATWG URL parser), so a protocol
+          // check here is sufficient to catch any javascript:/data:/vbscript: URI
+          // that slipped past the editor's parse/render-time guards
+          // (GHSA-v2vv-7wq3-8w2j).
+          if (/^(javascript|data|vbscript):/i.test(href)) {
+            return false;
+          }
+
           window.open(href, target);
 
           return true;
