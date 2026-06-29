@@ -15,11 +15,11 @@ import { CalendarDays, LayersIcon, Paperclip } from "lucide-react";
 import { EIconSize, ISSUE_PRIORITIES, STATE_GROUPS } from "@plane/constants";
 import { Logo } from "@plane/propel/emoji-icon-picker";
 import type { ISvgIcons } from "@plane/propel/icons";
-import { 
-  CycleGroupIcon, 
-  CycleIcon, 
-  ModuleIcon, 
-  PriorityIcon, 
+import {
+  CycleGroupIcon,
+  CycleIcon,
+  ModuleIcon,
+  PriorityIcon,
   StateGroupIcon,
   LinkIcon,
   StatePropertyIcon,
@@ -43,7 +43,7 @@ import type {
   TGroupedIssues,
   IIssueDisplayFilterOptions,
   TGetColumns,
-  TSpreadsheetColumn
+  TSpreadsheetColumn,
 } from "@plane/types";
 import { EIssuesStoreType } from "@plane/types";
 // plane ui
@@ -53,7 +53,7 @@ import { renderFormattedDate, getFileURL } from "@plane/utils";
 import { store } from "@/lib/store-context";
 import { ISSUE_FILTER_DEFAULT_DATA } from "@/store/issue/helpers/base-issues.store";
 import { DEFAULT_DISPLAY_PROPERTIES } from "@/store/issue/issue-details/sub_issues_filter.store";
-// constants 
+// constants
 import { ISSUE_GROUP_BY_OPTIONS } from "@plane/constants";
 // components
 import {
