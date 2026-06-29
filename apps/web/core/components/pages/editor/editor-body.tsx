@@ -244,7 +244,7 @@ export const PageEditorBody = observer(function PageEditorBody(props: Props) {
           <div className="page-summary-container absolute top-[64px] right-0 z-[5] h-full">
             <div className="sticky top-[72px]">
               <div className="group/page-toc relative px-page-x">
-              {/* oxlint-disable-next-line jsx_a11y/click-events-have-key-events */}
+                {/* oxlint-disable-next-line jsx_a11y/click-events-have-key-events */}
                 <div
                   className="max-h-[50vh] !cursor-pointer overflow-hidden"
                   // oxlint-disable-next-line jsx_a11y/prefer-tag-over-role

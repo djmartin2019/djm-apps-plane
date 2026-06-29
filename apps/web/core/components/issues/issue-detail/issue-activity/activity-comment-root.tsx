@@ -79,7 +79,7 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
             activityId={activityComment.id}
             ends={index === 0 ? "top" : index === filteredActivityAndComments.length - 1 ? "bottom" : undefined}
           />
-        ) : null
+        ) : null;
       })}
     </div>
   );
