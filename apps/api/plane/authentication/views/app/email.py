@@ -11,6 +11,7 @@ from django.views import View
 # Module imports
 from plane.authentication.provider.credentials.email import EmailProvider
 from plane.authentication.utils.login import user_login
+from plane.authentication.rate_limit import authentication_throttle_allows
 from plane.license.models import Instance
 from plane.authentication.utils.host import base_host
 from plane.authentication.utils.redirection_path import get_redirection_path
@@ -26,6 +27,23 @@ from plane.utils.path_validator import get_safe_redirect_url
 class SignInAuthEndpoint(View):
     def post(self, request):
         next_path = request.POST.get("next_path")
+
+        # Rate-limit all password auth attempts before any DB access.
+        # authentication_throttle_allows() applies the same AuthenticationThrottle
+        # that magic-code views use (default: 10/minute, configurable via
+        # AUTHENTICATION_RATE_LIMIT env var).
+        if not authentication_throttle_allows(request):
+            exc = AuthenticationException(
+                error_code=AUTHENTICATION_ERROR_CODES["RATE_LIMIT_EXCEEDED"],
+                error_message="RATE_LIMIT_EXCEEDED",
+            )
+            url = get_safe_redirect_url(
+                base_url=base_host(request=request, is_app=True),
+                next_path=next_path,
+                params=exc.get_error_dict(),
+            )
+            return HttpResponseRedirect(url)
+
         # Check instance configuration
         instance = Instance.objects.first()
         if instance is None or not instance.is_setup_done:
@@ -135,6 +153,20 @@ class SignInAuthEndpoint(View):
 class SignUpAuthEndpoint(View):
     def post(self, request):
         next_path = request.POST.get("next_path")
+
+        # Rate-limit before any DB access (same throttle as sign-in / magic-code).
+        if not authentication_throttle_allows(request):
+            exc = AuthenticationException(
+                error_code=AUTHENTICATION_ERROR_CODES["RATE_LIMIT_EXCEEDED"],
+                error_message="RATE_LIMIT_EXCEEDED",
+            )
+            url = get_safe_redirect_url(
+                base_url=base_host(request=request, is_app=True),
+                next_path=next_path,
+                params=exc.get_error_dict(),
+            )
+            return HttpResponseRedirect(url)
+
         # Check instance configuration
         instance = Instance.objects.first()
         if instance is None or not instance.is_setup_done:
