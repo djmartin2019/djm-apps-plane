@@ -1,3 +1,13 @@
+x-vite-build-args: &vite-build-args
+  VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
+  VITE_WEB_BASE_URL: ${VITE_WEB_BASE_URL:-}
+  VITE_ADMIN_BASE_URL: ${VITE_ADMIN_BASE_URL:-}
+  VITE_ADMIN_BASE_PATH: ${VITE_ADMIN_BASE_PATH:-/god-mode}
+  VITE_SPACE_BASE_URL: ${VITE_SPACE_BASE_URL:-}
+  VITE_SPACE_BASE_PATH: ${VITE_SPACE_BASE_PATH:-/spaces}
+  VITE_LIVE_BASE_URL: ${VITE_LIVE_BASE_URL:-}
+  VITE_LIVE_BASE_PATH: ${VITE_LIVE_BASE_PATH:-/live}
+
 services:
   web:
     container_name: web
@@ -6,6 +16,7 @@ services:
       dockerfile: ./apps/web/Dockerfile.web
       args:
         DOCKER_BUILDKIT: 1
+        <<: *vite-build-args
     restart: always
     depends_on:
       - api
@@ -17,6 +28,7 @@ services:
       dockerfile: ./apps/admin/Dockerfile.admin
       args:
         DOCKER_BUILDKIT: 1
+        <<: *vite-build-args
     restart: always
     depends_on:
       - api
@@ -29,6 +41,7 @@ services:
       dockerfile: ./apps/space/Dockerfile.space
       args:
         DOCKER_BUILDKIT: 1
+        <<: *vite-build-args
     restart: always
     depends_on:
       - api
