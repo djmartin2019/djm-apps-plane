@@ -37,6 +37,7 @@ pnpm-debug.log*
 # Local env files
 .env
 .env.local
+.env.vps
 .env.development.local
 .env.test.local
 .env.production.local
@@ -54,6 +55,8 @@ venv
 staticfiles
 mediafiles
 .env
+apps/api/.env.vps
+deploy/config
 .DS_Store
 logs/
 htmlcov/

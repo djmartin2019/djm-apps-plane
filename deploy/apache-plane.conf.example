@@ -1,0 +1,41 @@
+# Apache reverse proxy for Plane (TLS terminated here; Plane proxy on localhost:8090)
+#
+# 1. Replace plane.example.com with your domain
+# 2. Set SSLCertificateFile / SSLCertificateKeyFile (Hostinger paths or certbot)
+# 3. Match LISTEN_HTTP_PORT in .env.vps (default 8090)
+# 4. Enable modules:
+#      sudo a2enmod proxy proxy_http proxy_wstunnel rewrite ssl headers
+# 5. sudo cp deploy/apache-plane.conf.example /etc/apache2/sites-available/plane.conf
+#    sudo a2ensite plane && sudo systemctl reload apache2
+
+<VirtualHost *:80>
+    ServerName plane.example.com
+    Redirect permanent / https://plane.example.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName plane.example.com
+
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/plane.example.com/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/plane.example.com/privkey.pem
+
+    ProxyPreserveHost On
+    RequestHeader set X-Forwarded-Proto "https"
+    RequestHeader set X-Forwarded-For "%{REMOTE_ADDR}s"
+
+    # WebSockets for collaborative editing (/live/)
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule ^/live/(.*) ws://127.0.0.1:8090/live/$1 [P,L]
+
+    ProxyPass        / http://127.0.0.1:8090/
+    ProxyPassReverse / http://127.0.0.1:8090/
+
+    # Increase if you upload large attachments (bytes; 50MB here)
+    LimitRequestBody 52428800
+
+    ErrorLog ${APACHE_LOG_DIR}/plane-error.log
+    CustomLog ${APACHE_LOG_DIR}/plane-access.log combined
+</VirtualHost>

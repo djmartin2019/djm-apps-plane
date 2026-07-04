@@ -1,0 +1,7 @@
+# Copy to deploy/config and edit (deploy/config is gitignored)
+#
+# SSH target for rsync/scp (user@host or user@host:port syntax for ssh)
+VPS_SSH="deploy@your-vps.example.com"
+
+# Absolute path to this repo on the VPS
+VPS_PATH="/opt/plane"

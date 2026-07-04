@@ -151,7 +151,8 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
 
-  # Comment this if you already have a reverse proxy running
+  # Reverse proxy — bind LISTEN_HTTP_PORT to a high port on VPS when Apache uses 80/443
+  # See deploy/README.md and deploy/apache-plane.conf.example
   proxy:
     container_name: proxy
     build:
