@@ -4,7 +4,11 @@
  * See the LICENSE file for details.
  */
 
-if (typeof window !== "undefined" && window) {
+export function applyPolyfills() {
+  if (typeof window === "undefined" || !window) {
+    return;
+  }
+
   // Add request callback polyfill to browser in case it does not exist
   window.requestIdleCallback =
     window.requestIdleCallback ??
@@ -26,5 +30,3 @@ if (typeof window !== "undefined" && window) {
       clearTimeout(id);
     };
 }
-
-export {};

@@ -8,6 +8,16 @@ import type { ReactNode, MutableRefObject } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@plane/utils";
 
+function scheduleIdleCallback(callback: () => void, options?: IdleRequestOptions): number {
+  if (typeof window !== "undefined" && typeof window.requestIdleCallback === "function") {
+    return window.requestIdleCallback(callback, options);
+  }
+  if (typeof window !== "undefined") {
+    return window.setTimeout(callback, 1);
+  }
+  return 0;
+}
+
 type Props = {
   defaultHeight?: string;
   verticalOffset?: number;
@@ -47,37 +57,38 @@ function RenderIfVisible(props: Props) {
 
   // Set visibility with intersection observer
   useEffect(() => {
-    if (intersectionRef.current) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          //DO no remove comments for future
-          if (typeof window !== undefined && window.requestIdleCallback && useIdletime) {
-            window.requestIdleCallback(() => setShouldVisible(entries[entries.length - 1].isIntersecting), {
-              timeout: 300,
-            });
-          } else {
-            setShouldVisible(entries[entries.length - 1].isIntersecting);
-          }
-        },
-        {
-          root: root?.current,
-          rootMargin: `${verticalOffset}% ${horizontalOffset}% ${verticalOffset}% ${horizontalOffset}%`,
-        }
-      );
-      observer.observe(intersectionRef.current);
-      return () => {
-        if (intersectionRef.current) {
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-          observer.unobserve(intersectionRef.current);
-        }
-      };
+    const element = intersectionRef.current;
+    if (!element) {
+      return;
     }
-  }, [intersectionRef, children, root, verticalOffset, horizontalOffset]);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        //DO no remove comments for future
+        if (useIdletime) {
+          scheduleIdleCallback(() => setShouldVisible(entries[entries.length - 1].isIntersecting), {
+            timeout: 300,
+          });
+        } else {
+          setShouldVisible(entries[entries.length - 1].isIntersecting);
+        }
+      },
+      {
+        root: root?.current,
+        rootMargin: `${verticalOffset}% ${horizontalOffset}% ${verticalOffset}% ${horizontalOffset}%`,
+      }
+    );
+    observer.observe(element);
+
+    return () => {
+      observer.unobserve(element);
+    };
+  }, [intersectionRef, children, root, verticalOffset, horizontalOffset, useIdletime]);
 
   //Set height after render
   useEffect(() => {
     if (intersectionRef.current && isVisible && shouldRecordHeights) {
-      window.requestIdleCallback(() => {
+      scheduleIdleCallback(() => {
         if (intersectionRef.current) placeholderHeight.current = `${intersectionRef.current.offsetHeight}px`;
       });
     }

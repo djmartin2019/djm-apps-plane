@@ -7,6 +7,9 @@
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
+import { applyPolyfills } from "@/lib/polyfills";
+
+applyPolyfills();
 
 startTransition(() => {
   hydrateRoot(
