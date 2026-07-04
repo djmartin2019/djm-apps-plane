@@ -1,7 +1,10 @@
 # Copy to deploy/config and edit (deploy/config is gitignored)
 #
-# SSH target for rsync/scp (user@host or user@host:port syntax for ssh)
+# SSH target for rsync/scp (user@host, or a Host alias from ~/.ssh/config)
 VPS_SSH="deploy@your-vps.example.com"
+
+# Optional: path to private key (e.g. ~/.ssh/hostinger). Leave empty to use ssh-agent / ~/.ssh/config
+VPS_SSH_KEY=""
 
 # Absolute path to this repo on the VPS
 VPS_PATH="/opt/plane"

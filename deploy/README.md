@@ -26,7 +26,7 @@ Configure Apache using `deploy/apache-plane.conf.example`.
 ```bash
 # 1. SSH/deploy target
 cp deploy/config.example deploy/config
-# edit VPS_SSH and VPS_PATH
+# edit VPS_SSH, VPS_PATH, and VPS_SSH_KEY (if not using ~/.ssh/config)
 
 # 2. Production env files (gitignored)
 cp .env.vps.example .env.vps
@@ -52,12 +52,13 @@ Use `./deploy/env-sync.sh --dry-run` to preview transfers.
 
 ## Troubleshooting
 
-| Symptom                     | Check                                                              |
-| --------------------------- | ------------------------------------------------------------------ |
-| Maintenance / startup error | `curl -i https://plane.example.com/api/instances/` → should be 200 |
-| 502 Bad Gateway             | `docker logs api --tail 50`, `docker logs proxy --tail 30`         |
-| CORS errors                 | `CORS_ALLOWED_ORIGINS` must match public URL exactly               |
-| Upload failures             | `USE_MINIO=1`, `AWS_S3_ENDPOINT_URL=http://plane-minio:9000`       |
+| Symptom                     | Check                                                                     |
+| --------------------------- | ------------------------------------------------------------------------- |
+| Maintenance / startup error | `curl -i https://plane.example.com/api/instances/` → should be 200        |
+| 502 Bad Gateway             | `docker logs api --tail 50`, `docker logs proxy --tail 30`                |
+| CORS errors                 | `CORS_ALLOWED_ORIGINS` must match public URL exactly                      |
+| Upload failures             | `USE_MINIO=1`, `AWS_S3_ENDPOINT_URL=http://plane-minio:9000`              |
+| `rsync: --chmod=F600` error | Fixed in env-sync.sh; use latest script or manual rsync without `--chmod` |
 
 ## Port reference
 

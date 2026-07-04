@@ -11,6 +11,13 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
+trim() {
+  local s="$1"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "$s"
+}
+
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [options]
@@ -47,8 +54,17 @@ fi
 # shellcheck source=/dev/null
 source "${CONFIG_FILE}"
 
-if [[ -z "${VPS_SSH:-}" || -z "${VPS_PATH:-}" ]]; then
+VPS_SSH="$(trim "${VPS_SSH:-}")"
+VPS_PATH="$(trim "${VPS_PATH:-}")"
+VPS_SSH_KEY="$(trim "${VPS_SSH_KEY:-}")"
+
+if [[ -z "${VPS_SSH}" || -z "${VPS_PATH}" ]]; then
   echo -e "${RED}VPS_SSH and VPS_PATH must be set in deploy/config${NC}" >&2
+  exit 1
+fi
+
+if [[ -n "${VPS_SSH_KEY}" && ! -f "${VPS_SSH_KEY}" ]]; then
+  echo -e "${RED}VPS_SSH_KEY file not found: ${VPS_SSH_KEY}${NC}" >&2
   exit 1
 fi
 
@@ -67,7 +83,17 @@ if [[ "${missing}" -eq 1 ]]; then
   exit 1
 fi
 
-RSYNC_FLAGS=(-avz --chmod=F600)
+SSH_CMD=(ssh)
+if [[ -n "${VPS_SSH_KEY}" ]]; then
+  SSH_CMD+=(-i "${VPS_SSH_KEY}")
+fi
+
+# macOS openrsync does not support --chmod; set permissions via ssh after transfer
+RSYNC_FLAGS=(-avz)
+if [[ -n "${VPS_SSH_KEY}" ]]; then
+  RSYNC_FLAGS+=(-e "ssh -i ${VPS_SSH_KEY}")
+fi
+
 if [[ "${DRY_RUN}" -eq 1 ]]; then
   RSYNC_FLAGS+=(--dry-run -v)
   echo -e "${YELLOW}Dry run — no files will be changed on the server.${NC}"
@@ -78,5 +104,14 @@ echo -e "${GREEN}Syncing env files to ${VPS_SSH}:${VPS_PATH}${NC}"
 rsync "${RSYNC_FLAGS[@]}" "${ROOT_ENV}" "${VPS_SSH}:${VPS_PATH}/.env"
 rsync "${RSYNC_FLAGS[@]}" "${API_ENV}" "${VPS_SSH}:${VPS_PATH}/apps/api/.env"
 
+if [[ "${DRY_RUN}" -eq 0 ]]; then
+  "${SSH_CMD[@]}" "${VPS_SSH}" "chmod 600 '${VPS_PATH}/.env' '${VPS_PATH}/apps/api/.env'"
+fi
+
+SSH_HINT="${VPS_SSH}"
+if [[ -n "${VPS_SSH_KEY}" ]]; then
+  SSH_HINT="ssh -i ${VPS_SSH_KEY} ${VPS_SSH}"
+fi
+
 echo -e "${GREEN}Done.${NC} On the VPS, restart if needed:"
-echo "  ssh ${VPS_SSH} 'cd ${VPS_PATH} && docker compose up -d --force-recreate api worker beat-worker proxy'"
+echo "  ${SSH_HINT} 'cd ${VPS_PATH} && docker compose up -d --force-recreate api worker beat-worker proxy'"
